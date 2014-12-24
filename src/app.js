@@ -19,15 +19,15 @@ var todostore = immstruct({
                     ]
     })
 
-var checkedMixin = {
+var todoMixins = {
   onChecked() {
     this.props.todo.update('checked', state => !state)
   }
 }
 
-var Todo = component(checkedMixin, function() {
+var Todo = component(todoMixins, function() {
     return (
-       <li className={this.props.todo.get('checked') && 'completed'}>
+       <li id="todo-list" className={this.props.todo.get('checked') && 'completed'}>
         <div className="view">
           <input className="toggle" type="checkbox" onChange={this.onChecked} checked={this.props.todo.get('checked')}/>
           <label> {this.props.todo.get('text')} </label>
@@ -38,10 +38,16 @@ var Todo = component(checkedMixin, function() {
     )}
 )
 
-var TodoList = component(function() {
+var todoListMixins = {
+  onChecked() {
+    this.refs.checkAll.checked = !this.refs.checkAll.checked
+    this.props.todolist.forEach(i => i.update('checked', () => this.refs.checkAll.checked))
+  }
+}
+var TodoList = component(todoListMixins, function() {
     return (
         <section id="main">
-          <input id="toggle-all" type="checkbox"/>
+          <input id="toggle-all" type="checkbox" checked={false} onChange={this.onChecked} ref="checkAll"/>
           <ul id="todo-list">
             { this.props.todolist.map((item, index) => <Todo key={index} todo={item}/>).toArray() }
           </ul>
@@ -78,7 +84,7 @@ var Main = component(mainMixins, function() {
       <div id="todoapp">
         <header id="header">
           <h1> Todos </h1>
-          <input id="new-todo" placeholder='What needs to be done?' autoFocus={true} onKeyDown={this.onAdded} ref="text"/>
+          <input id="new-todo" type='text' placeholder='What needs to be done?' autoFocus={true} onKeyDown={this.onAdded} ref="text"/>
         </header>
 
         { <TodoList todolist={this.props.todolist}/> }
