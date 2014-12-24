@@ -1,11 +1,11 @@
 todo-omniscient
 ===============
 
-clone and run:
-####npm install
+First clone the repository and then run:
+#####npm install
 
-then to build:
+next, to build run:
 
-####npm run build
+#####npm run build
 
-finally, open index.html 
+Finally, open index.html in your favorite browser 
