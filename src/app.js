@@ -49,7 +49,7 @@ var TodoList = component(function() {
     )}
 )
 
-var addedMixin = {
+var mainMixins = {
   onAdded(event) {
     if (event.key === 'Enter') {
       event.preventDefault()
@@ -60,23 +60,20 @@ var addedMixin = {
         this.refs.text.getDOMNode().value = ''
       }
     }
-  }
-}
-var clearCompletedMixin = {
+  },
   clearCompleted() {
     if(this.props.completed > 0) {
       //todo ?
       // this.props.todolist.update(items => items.filter(immstruct({checked: false, text: val}).current) )
     }
+  },
+  completed() {
+    var totalCompleted = 0
+    this.props.todolist.forEach(function(item) { if(item.get('checked')) totalCompleted += 1 })
+    return totalCompleted;
   }
 }
-var Main = component([addedMixin, clearCompletedMixin], function() {
-    function completed(todolist) {
-      var totalCompleted = 0
-      todolist.forEach(function(item) { if(item.get('checked')) totalCompleted += 1 })
-      return totalCompleted;
-    }
-
+var Main = component(mainMixins, function() {
     return (
       <div id="todoapp">
         <header id="header">
@@ -88,7 +85,7 @@ var Main = component([addedMixin, clearCompletedMixin], function() {
 
         <footer id="footer">
           <span id="todo-count">
-            <strong> ({this.props.todolist.size - completed(this.props.todolist)}) items left </strong>
+            <strong> ({this.props.todolist.size - this.completed()}) items left </strong>
           </span>
           <ul id="filters">
             <li className="selected"><a href="#/"> All </a></li>
