@@ -1,5 +1,5 @@
 {
-  "name": "omniscent",
+  "name": "omniscent-todo",
   "version": "0.0.1",
   "description": "test",
   "main": "app.js",
@@ -11,8 +11,9 @@
   },
   "devDependencies": {},
   "scripts": {
+    "build": "browserify ./src/app.js -t [reactify --es6] -do ./build/bundle.js",
     "test": "test"
   },
-  "author": "Srdjan",
+  "author": "@djidja8",
   "license": "MIT"
 }
