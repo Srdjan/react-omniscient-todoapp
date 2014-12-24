@@ -11,7 +11,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "build": "run ./build.sh",
+    "build": "build.bat",
     "test": "test"
   },
   "author": "@djidja8",
