@@ -1,5 +1,5 @@
 //
-//- omniscient ToDo app
+//- app:     Omniscient-ToDo
 //- author:  @djidja8
 //- version: v0.1
 //
@@ -10,7 +10,6 @@ var React     = require('react'),
     component = require('omniscient')
 
 var todostore = immstruct({
-            completed: 2,
              items: [
                       { checked: false, text: 'Buy milk' },
                       { checked: true,  text: 'Make example application with JSX' },
@@ -26,18 +25,13 @@ var checkedMixin = {
   }
 }
 
-var removedMixin = {
-  onRemoved(key) {
-    // this.props.todolist.update(items => items.filter((item, index) => index === this.key ))
-  }
-}
-var Todo = component([checkedMixin, removedMixin], function() {
+var Todo = component(checkedMixin, function() {
     return (
        <li className={this.props.todo.get('checked') && 'completed'}>
         <div className="view">
           <input className="toggle" type="checkbox" onChange={this.onChecked} checked={this.props.todo.get('checked')}/>
           <label> {this.props.todo.get('text')} </label>
-          <button className="destroy" onClick={this.onRemoved}/>
+          <button className="destroy"/>
         </div>
         <input className="edit"/>
       </li>
@@ -72,12 +66,17 @@ var clearCompletedMixin = {
   clearCompleted() {
     if(this.props.completed > 0) {
       //todo ?
-      this.props.todolist.update(items => items.slice(immstruct({checked: false, text: val}).current) )
+      // this.props.todolist.update(items => items.filter(immstruct({checked: false, text: val}).current) )
     }
   }
 }
 var Main = component([addedMixin, clearCompletedMixin], function() {
-    console.log(this.props.todolist.deref())
+    function completed(todolist) {
+      var totalCompleted = 0
+      todolist.forEach(function(item) { if(item.get('checked')) totalCompleted += 1 })
+      return totalCompleted;
+    }
+
     return (
       <div id="todoapp">
         <header id="header">
@@ -89,7 +88,7 @@ var Main = component([addedMixin, clearCompletedMixin], function() {
 
         <footer id="footer">
           <span id="todo-count">
-            <strong> ({this.props.todolist.size - this.props.completed}) items left </strong>
+            <strong> ({this.props.todolist.size - completed(this.props.todolist)}) items left </strong>
           </span>
           <ul id="filters">
             <li className="selected"><a href="#/"> All </a></li>
@@ -103,7 +102,7 @@ var Main = component([addedMixin, clearCompletedMixin], function() {
 })
 
 function render() {
-  React.render(<Main todolist={todostore.cursor(['items'])} completed={todostore.cursor('completed')}/>, document.body);
+  React.render(<Main todolist={todostore.cursor(['items'])}/>, document.body);
 }
 todostore.on('swap', render)
 render()
