@@ -68,9 +68,9 @@ var mainMixins = {
     }
   },
   clearCompleted() {
-    if(this.props.completed > 0) {
-      //todo ?
-      // this.props.todolist.update(items => items.filter(immstruct({checked: false, text: val}).current) )
+    var totalCompleted = this.completed()
+    if(totalCompleted > 0) {
+      this.props.todolist.update(items => items.filter(i => !i.get('checked')) )
     }
   },
   completed() {
