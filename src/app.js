@@ -22,16 +22,21 @@ var todostore = immstruct({
 var todoMixins = {
   onChecked() {
     this.props.todo.update('checked', state => !state)
+  },
+  handleEdit() {
+    // this.props.todo.update('checked', state => !state)
+  },
+  onDestroy() {
+    // this.props.todo.update('checked', state => !state)
   }
 }
-
 var Todo = component(todoMixins, function() {
     return (
        <li id="todo-list" className={this.props.todo.get('checked') && 'completed'}>
         <div className="view">
           <input className="toggle" type="checkbox" onChange={this.onChecked} checked={this.props.todo.get('checked')}/>
-          <label> {this.props.todo.get('text')} </label>
-          <button className="destroy"/>
+          <label onDoubleClick={this.handleEdit}> {this.props.todo.get('text')} </label>
+          <button className="destroy" onClick={this.onDestroy}/>
         </div>
         <input className="edit"/>
       </li>

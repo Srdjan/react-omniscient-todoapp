@@ -11,7 +11,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "build": "browserify ./src/app.js -t [reactify --es6] -do ./build/bundle.js",
+    "build": "run ./build.sh",
     "test": "test"
   },
   "author": "@djidja8",
