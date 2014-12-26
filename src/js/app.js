@@ -9,15 +9,7 @@ var React     = require('react'),
     immstruct = require('immstruct'),
     component = require('omniscient')
 
-var todostore = immstruct({
-             items: [
-                      { checked: false, text: 'Buy milk' },
-                      { checked: true,  text: 'Make example application with JSX' },
-                      { checked: false, text: 'Compile using the --harmony flag' },
-                      { checked: false, text: 'Check checkboxes' },
-                      { checked: true,  text: 'Update example to use React 0.12' }
-                    ]
-    })
+var todostore = immstruct({ items: [{checked: false, archived: false, text: 'Buy milk'}] })
 
 var todoMixins = {
   onChecked() {
@@ -27,7 +19,7 @@ var todoMixins = {
     // this.props.todo.update('checked', state => !state)
   },
   onDestroy() {
-    // this.props.todo.update('checked', state => !state)
+    this.props.todo.set('archived', true);
   }
 }
 var Todo = component(todoMixins, function() {
@@ -54,7 +46,7 @@ var TodoList = component(todoListMixins, function() {
         <section id="main">
           <input id="toggle-all" type="checkbox" checked={false} onChange={this.onChecked} ref="checkAll"/>
           <ul id="todo-list">
-            { this.props.todolist.map((item, index) => <Todo key={index} todo={item}/>).toArray() }
+            { this.props.todolist.map((i, indx) => i.get('archived') ? '' : <Todo key={indx} todo={i}/>).toArray() }
           </ul>
         </section>
     )}
@@ -67,21 +59,24 @@ var mainMixins = {
 
       var val = this.refs.text.getDOMNode().value.trim()
       if (val) {
-        this.props.todolist.update(items => items.push(immstruct({checked: false, text: val}).current) )
+        this.props.todolist.update(items => items.push(immstruct({checked: false, archived: false, text: val}).current) )
         this.refs.text.getDOMNode().value = ''
       }
     }
   },
   clearCompleted() {
-    var totalCompleted = this.completed()
-    if(totalCompleted > 0) {
-      this.props.todolist.update(items => items.filter(i => !i.get('checked')) )
-    }
+    // if(this.completed() > 0) {
+      this.props.todolist.update(items => items.filter(i => !i.get('checked')))
+    // }
   },
-  completed() {
-    var totalCompleted = 0
-    this.props.todolist.forEach(function(item) { if(item.get('checked')) totalCompleted += 1 })
-    return totalCompleted;
+  itemsLeft() {
+    var completed = 0, archived = 0
+    this.props.todolist.forEach(item => {
+                                          if(item.get('checked')) completed += 1
+                                          if(item.get('archived')) archived += 1
+                                        }
+    )
+    return this.props.todolist.size - completed - archived
   }
 }
 var Main = component(mainMixins, function() {
@@ -89,21 +84,25 @@ var Main = component(mainMixins, function() {
       <div id="todoapp">
         <header id="header">
           <h1> Todos </h1>
-          <input id="new-todo" type='text' placeholder='What needs to be done?' autoFocus={true} onKeyDown={this.onAdded} ref="text"/>
+          <input id="new-todo" type='text' placeholder='What needs to be done?'
+                                           autoFocus={true}
+                                           onKeyDown={this.onAdded}
+                                           ref="text"/>
         </header>
 
         { <TodoList todolist={this.props.todolist}/> }
 
         <footer id="footer">
           <span id="todo-count">
-            <strong> ({this.props.todolist.size - this.completed()}) items left </strong>
+            <strong> ({this.itemsLeft()}) items left </strong>
           </span>
           <ul id="filters">
             <li className="selected"><a href="#/"> All </a></li>
             <li><a href="#/active"> Active </a></li>
             <li><a href="#/completed"> Completed </a></li>
+            <li><a href="#/archived"> Archived </a></li>
           </ul>
-          <button id="clear-completed" onClick={this.clearCompleted}> Clear completed </button>
+          <button id="clear-completed" onClick={this.clearCompleted}> Clear Completed </button>
         </footer>
       </div>
     )
