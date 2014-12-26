@@ -126,7 +126,7 @@ var Main = component(mainMixins, function() {
           </ul>
           <button id="clear-completed" onClick={this.clearCompleted}> Clear Completed </button>
           <div id="info">
-            <p>Created by <a href="http://twitter.com/djidja8/">djidja8</a></p>
+            <p>Created by <a href="http://twitter.com/djidja8/" target="_blank">djidja8</a></p>
           </div>
         </footer>
       </div>
