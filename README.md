@@ -1,6 +1,6 @@
 # react-omniscient-todoapp
  
-[Working demo](http://functorial.com/purescript-thermite-todomvc/)
+[Working demo](https://dl.dropboxusercontent.com/u/51491957/todo-app/index.html)
 
 A todo demo app written using [`react and omnisicient`]
 
