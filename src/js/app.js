@@ -19,12 +19,6 @@ var todoMixins = {
   onChecked() {
     this.props.todo.update('checked', state => !state)
   },
-  handleEdit() {
-    // todo
-  },
-  handleChange() {
-    // todo
-  },
   onDestroy() {
     this.props.todo.set('archived', true);
   }
@@ -37,14 +31,9 @@ var Todo = component(todoMixins, function() {
                  type="checkbox"
                  onChange={this.onChecked}
                  checked={this.props.todo.get('checked')}/>
-          <label onDoubleClick={this.handleEdit}> {this.props.todo.get('text')} </label>
+          <label> {this.props.todo.get('text')} </label>
           <button className="destroy" onClick={this.onDestroy}/>
         </div>
-        <input className="edit"
-               value={this.props.todo}
-               onBlur={this.handleSubmit}
-               onChange={this.handleChange}
-               onKeyDown={this.handleKeyDown}/>
       </li>
     )}
 )
@@ -136,7 +125,7 @@ var Main = component(mainMixins, function() {
 //-- start
 //
 function render() {
-  React.render(<Main todolist={todostore.cursor(['items'])}/>, document.body);
+  React.render(<Main todolist={todostore.cursor('items')}/>, document.body);
 }
 todostore.on('swap', render)
 render()
