@@ -102,14 +102,14 @@ var Main = component(mainMixins, function() {
             <strong> {this.itemsLeft()} items left </strong>
           </span>
           <ul id="filters">
-            <li className="selected"><a href="#/"> All </a></li>
+            <li><a className="selected" href="#/"> All </a></li>
             <li><a href="#/active"> Active </a></li>
             <li><a href="#/completed"> Completed </a></li>
-            <li><a href="#/archived"> Archived </a></li>
           </ul>
           <button id="clear-completed" onClick={this.clearCompleted}> Clear Completed </button>
           <div id="info">
-            <p>Created by <a href="http://twitter.com/djidja8/" target="_blank">djidja8</a></p>
+            <p>Created by: <a href="http://twitter.com/djidja8/" target="_blank">djidja8</a> ---
+               View on <a href="https://github.com/Srdjan/todo-omniscient">Github</a></p>
           </div>
         </footer>
       </div>
