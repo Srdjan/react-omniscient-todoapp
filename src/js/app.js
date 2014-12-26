@@ -16,7 +16,7 @@ var todostore = immstruct({
 //-- todo component
 //
 var todoMixins = {
-  onChecked() {
+  onToggled() {
     this.props.todo.update('checked', state => !state)
   },
   onDestroy() {
@@ -29,7 +29,7 @@ var Todo = component(todoMixins, function() {
         <div className="view">
           <input className="toggle"
                  type="checkbox"
-                 onChange={this.onChecked}
+                 onChange={this.onToggled}
                  checked={this.props.todo.get('checked')}/>
           <label> {this.props.todo.get('text')} </label>
           <button className="destroy" onClick={this.onDestroy}/>
@@ -41,9 +41,9 @@ var Todo = component(todoMixins, function() {
 //-- todolist component
 //
 var todoListMixins = {
-  onChecked() {
-    this.refs.checkAll.checked = !this.refs.checkAll.checked
-    this.props.todolist.forEach(i => i.update('checked', () => this.refs.checkAll.checked))
+  onToggled() {
+    this.refs.toggleAll.checked = !this.refs.toggleAll.checked
+    this.props.todolist.forEach(i => i.update('checked', () => this.refs.toggleAll.checked))
   }
 }
 var TodoList = component(todoListMixins, function() {
@@ -51,8 +51,8 @@ var TodoList = component(todoListMixins, function() {
         <section id="main">
           <input id="toggle-all" type="checkbox"
                                  checked={false}
-                                 onChange={this.onChecked}
-                                 ref="checkAll"/>
+                                 onChange={this.onToggled}
+                                 ref="toggleAll"/>
           <ul id="todo-list">
             {
               this.props.todolist.map((i, indx) =>
@@ -81,13 +81,7 @@ var mainMixins = {
     this.props.todolist.update(items => items.filter(i => !i.get('checked')))
   },
   itemsLeft() {
-    var completed = 0, archived = 0
-    this.props.todolist.forEach(item => {
-                                          if(item.get('checked')) completed += 1
-                                          if(item.get('archived')) archived += 1
-                                        }
-    )
-    return this.props.todolist.size - completed - archived
+    return this.props.todolist.count(i => !i.get('checked') && !i.get('archived'))
   }
 }
 var Main = component(mainMixins, function() {
@@ -105,7 +99,7 @@ var Main = component(mainMixins, function() {
 
         <footer id="footer">
           <span id="todo-count">
-            <strong> ({this.itemsLeft()}) items left </strong>
+            <strong> {this.itemsLeft()} items left </strong>
           </span>
           <ul id="filters">
             <li className="selected"><a href="#/"> All </a></li>
