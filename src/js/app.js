@@ -7,11 +7,20 @@ var React     = require('react'),
     immstruct = require('immstruct'),
     component = require('omniscient')
 
-//-- todo data store
+//-- todo app
 //
-var todostore = immstruct({
-                    items: [{checked: false, archived: false, text: 'Buy milk'}]
-                })
+var app = function() {
+  var struct = immstruct({ items: [{checked: false, archived: false, text: 'Buy milk'}]})
+
+  return {
+    start(render) {
+      struct.on('swap', render)
+      render()
+    },
+    model() {
+      return struct.cursor('items')}
+    }
+}()
 
 //-- todo component
 //
@@ -70,7 +79,7 @@ var mainMixins = {
     if (event.key === 'Enter') {
       var val = this.refs.text.getDOMNode().value.trim()
       if (val) {
-        this.props.todolist.update(items => items.push(
+        this.props.model.update(items => items.push(
                                    immstruct({checked: false, archived: false, text: val})
                                    .current))
         this.refs.text.getDOMNode().value = ''
@@ -78,10 +87,10 @@ var mainMixins = {
     }
   },
   clearCompleted() {
-    this.props.todolist.update(items => items.filter(i => !i.get('checked')))
+    this.props.model.update(items => items.filter(i => !i.get('checked')))
   },
   itemsLeft() {
-    return this.props.todolist.count(i => !i.get('checked') && !i.get('archived'))
+    return this.props.model.count(i => !i.get('checked') && !i.get('archived'))
   }
 }
 var Main = component(mainMixins, function() {
@@ -95,7 +104,7 @@ var Main = component(mainMixins, function() {
                                            ref="text"/>
         </header>
 
-        { <TodoList todolist={this.props.todolist}/> }
+        { <TodoList todolist={this.props.model}/> }
 
         <footer id="footer">
           <span id="todo-count">
@@ -117,9 +126,4 @@ var Main = component(mainMixins, function() {
 })
 
 //-- start
-//
-function render() {
-  React.render(<Main todolist={todostore.cursor('items')}/>, document.body);
-}
-todostore.on('swap', render)
-render()
+app.start(() => React.render(<Main model={app.model()}/>, document.body))
