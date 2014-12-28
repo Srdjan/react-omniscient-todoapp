@@ -117,8 +117,12 @@ var Main = component(mainMixins, function() {
           </ul>
           <button id="clear-completed" onClick={this.clearCompleted}> Clear Completed </button>
           <div id="info">
+            <p>Using <a href="https://facebook.github.io/react/" target="_blank">ReactJS</a>
+               <span> and </span><a href="https://omniscientjs.github.io/" target="_blank">Omnisicient</a>
+            </p>
             <p>Created by: <a href="http://twitter.com/djidja8/" target="_blank">djidja8</a> ---
-               View on <a href="https://github.com/Srdjan/todo-omniscient">Github</a></p>
+               View on <a href="https://github.com/Srdjan/todo-omniscient">Github</a>
+            </p>
           </div>
         </footer>
       </div>
