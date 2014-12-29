@@ -15,7 +15,7 @@
     "rimraf": "^2.2.8"
   },
   "scripts": {
-    "build": "browserify ./src/js/app.js -t [reactify --es6] -do ./src/js/bundle.js",
+    "build": "browserify ./src/js/app.js -t [reactify --es6] -o ./src/js/bundle.js",
     "build-dist": "rimraf build && cp src/* build/*",
     "clean": "rimraf build"
   },
